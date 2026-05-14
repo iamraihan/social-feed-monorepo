@@ -1,0 +1,12 @@
+packages:
+  - "apps/*"
+
+# pnpm 9+ blocks postinstall scripts by default. Allow them only for
+# packages we actually need to build (Prisma engine, Nest CLI, bcrypt
+# native binding, sharp image processor).
+onlyBuiltDependencies:
+  - "@prisma/engines"
+  - prisma
+  - "@nestjs/core"
+  - bcrypt
+  - sharp

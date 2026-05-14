@@ -1,0 +1,18 @@
+node_modules/
+dist/
+.next/
+*.tsbuildinfo
+
+# Env files — templates are committed (.env.example), real ones are not
+.env
+.env.local
+.env.*.local
+
+# Local API uploads (image files written at runtime)
+apps/api/uploads/
+
+# OS / editor cruft
+.DS_Store
+.vscode/
+.idea/
+*.log

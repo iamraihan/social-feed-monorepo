@@ -1,0 +1,18 @@
+{
+  "name": "social-feed",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Social feed — fullstack monorepo (NestJS API + Next.js web). Built for the Appifylab Full Stack Engineer selection task.",
+  "scripts": {
+    "dev": "bash scripts/dev.sh",
+    "stop": "pnpm --filter ./apps/api db:down"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  },
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=9"
+  },
+  "packageManager": "pnpm@10.33.0"
+}

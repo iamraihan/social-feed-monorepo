@@ -1,0 +1,680 @@
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+html {
+  height: 100%;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+body {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    color-scheme: dark;
+  }
+}
+
+/* Shared validation message styling. Single source so error appearance
+ * stays consistent across every form in the app. */
+.form-field-error {
+  color: #d32f2f;
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+.form-server-error {
+  color: #d32f2f;
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+/* Utility-page styles (loading / error / not-found / global-error). Used
+ * by the framework boundaries — kept in globals so CSP can stay strict
+ * (no inline style attributes on those pages). */
+.page-centered {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #666;
+  padding: 24px;
+}
+
+.page-centered__heading {
+  font-size: 24px;
+  margin-bottom: 12px;
+  color: #222;
+}
+
+.page-centered__message {
+  color: #666;
+  margin-bottom: 24px;
+  font-size: 14px;
+}
+
+.page-centered__link {
+  color: #377dff;
+  text-decoration: underline;
+}
+
+.skeleton-page {
+  padding: 80px;
+  text-align: center;
+  color: #666;
+}
+
+.btn-primary {
+  padding: 10px 20px;
+  background: #377dff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-primary:focus-visible {
+  outline: 2px solid #112032;
+  outline-offset: 2px;
+}
+
+.btn-reset {
+  background: none;
+  border: none;
+  padding: 0;
+  color: inherit;
+  font: inherit;
+  text-align: inherit;
+  cursor: pointer;
+}
+
+.btn-reset:focus-visible {
+  outline: 2px solid #112032;
+  outline-offset: 2px;
+}
+
+/* Comment-count button in the reactions strip. The design's CSS styled the
+ * original `<a>` element gray; we use a `<button>` for the click-to-expand
+ * behaviour, so re-apply the same colour here. The inner `<span>` is already
+ * picked up by `._feed_inner_timeline_total_reacts_para1 span` (dark accent
+ * for the count). */
+._feed_inner_timeline_total_reacts_para1 button.btn-reset {
+  color: rgba(0, 0, 0, 0.46);
+}
+._feed_inner_timeline_total_reacts_para1 button.btn-reset:hover {
+  text-decoration: underline;
+}
+
+
+/* Header profile dropdown logout button — replaces the inline style attr
+ * so CSP can disallow style-attr if we ever tighten further. */
+.nav-dropdown-form-button {
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+}
+
+/* Composer image-preview + visibility selector. Co-located here because
+ * they're feed-specific atoms; would graduate to a CSS module once the
+ * feed feature has more bespoke UI. */
+.composer-image-preview {
+  position: relative;
+  margin-top: 12px;
+  border-radius: 6px;
+  overflow: hidden;
+  max-width: 100%;
+}
+
+.composer-image-preview img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 320px;
+  object-fit: cover;
+}
+
+.composer-image-remove {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.composer-image-remove:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.composer-visibility {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 12px;
+}
+
+.composer-visibility-select {
+  background: #f5f7fa;
+  border: 1px solid #e1e5eb;
+  border-radius: 4px;
+  padding: 6px 10px;
+  font-size: 13px;
+  color: #333;
+  cursor: pointer;
+}
+
+/* Accessibility helper — hide visually but keep available to screen
+ * readers + keyboard focus. Standard pattern. */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Stacked Avatars for "who liked" — small circles overlapping with a white
+ * ring so distinct circles read cleanly. Same <Avatar> component as
+ * elsewhere; the CSS owns spacing + ring. Number of stacked avatars
+ * always equals the number of likers returned by the backend — never
+ * pads, never fakes. */
+.liker-stack {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  margin-right: 6px;
+}
+.liker-stack > * + * {
+  margin-left: -8px;
+}
+.liker-stack > * {
+  box-shadow: 0 0 0 2px #fff;
+  border-radius: 9999px;
+}
+
+/* Compact count badge that follows the liker stack ("9+" style from the
+ * design). Sits as a small blue chip so total like-count stays visible
+ * even when the stack only shows the top 3. */
+.liker-count-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 26px;
+  height: 26px;
+  padding: 0 8px;
+  border-radius: 9999px;
+  background: #377dff;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.liker-count-empty {
+  color: #888;
+  font-size: 13px;
+}
+
+/* Initials avatar — guarantees a perfect circle that no design-CSS class
+ * can squash. `!important` is heavy-handed but necessary: the design's
+ * `_post_img`, `_nav_profile_img`, `_box_ppl_img`, etc. were sized for
+ * <img> tags and try to apply object-fit / border / fixed dimensions that
+ * fight our dynamic `size` prop. */
+.avatar-initials {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 9999px !important;
+  flex-shrink: 0 !important;
+  color: #fff !important;
+  font-weight: 600 !important;
+  line-height: 1 !important;
+  user-select: none;
+  overflow: hidden;
+  box-sizing: border-box !important;
+  text-align: center;
+  vertical-align: middle;
+  padding: 0 !important;
+}
+
+/* ---------- Comment section ----------
+ * Co-located with the design's _feed_inner_comment_box / _comment_main classes
+ * so the look matches the original feed.html mockup. The selectors below
+ * extend (don't replace) the design CSS with the behaviour the design didn't
+ * cover: submit-button, error banner, action-button hover/active states, etc.
+ */
+
+.comment-composer {
+  margin-bottom: 12px;
+}
+.comment-composer-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+.comment-composer-submit {
+  font-size: 13px;
+  padding: 6px 16px;
+}
+.comment-composer-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.comment-composer-error {
+  margin-top: 8px;
+  margin-bottom: 0;
+}
+
+.liker-summary-button {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+}
+.liker-summary-button:hover .liker-count-badge {
+  filter: brightness(1.1);
+}
+
+.comment-likes-summary {
+  margin-top: 6px;
+}
+.comment-likes-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #555;
+  font-size: 13px;
+  padding: 2px 0;
+}
+.comment-likes-count:hover {
+  text-decoration: underline;
+}
+
+.comment-action {
+  color: #65676b;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 0 4px;
+}
+.comment-action:hover {
+  text-decoration: underline;
+}
+.comment-action-active {
+  color: #e0245e;
+  font-weight: 600;
+}
+.comment-action-danger:hover {
+  color: #d32f2f;
+}
+.comment-action:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  text-decoration: none;
+}
+
+.comment-view-replies {
+  display: inline-flex;
+  align-items: center;
+  color: #377dff;
+  font-size: 13px;
+  font-weight: 500;
+  margin-top: 6px;
+  padding: 0;
+}
+.comment-view-replies:hover {
+  text-decoration: underline;
+}
+
+.comment-section-expand {
+  display: block;
+  color: #377dff;
+  font-size: 13px;
+  margin: 12px 0;
+  padding: 0;
+}
+.comment-section-expand:hover {
+  text-decoration: underline;
+}
+
+.comment-list-empty,
+.comment-list-status,
+.reply-list-status {
+  color: #65676b;
+  font-size: 13px;
+  padding: 8px 0;
+}
+
+.reply-list {
+  margin-top: 8px;
+  padding-left: 36px;
+  border-left: 2px solid #f0f2f5;
+}
+.reply-list-more {
+  display: inline-flex;
+  color: #377dff;
+  font-size: 13px;
+  margin-top: 4px;
+}
+.reply-list-more:hover {
+  text-decoration: underline;
+}
+
+/* ---------- Shared Modal primitive ----------
+ * Portal'd to <body>. Backdrop owns dismiss-on-click (the Modal component
+ * claims the dialog as the inner click target). Width variants live on the
+ * dialog className (e.g., .likers-modal, .confirm-dialog).
+ *
+ * Class names are `app-modal*` to avoid Bootstrap's `.modal` / `.modal-backdrop`
+ * which the design CSS imports globally and which sets `display: none`.
+ * Don't rename these to bare `.modal` without first stripping Bootstrap.
+ */
+.app-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1060;
+  padding: 16px;
+}
+
+.app-modal {
+  background: #fff;
+  border-radius: 8px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+  outline: none;
+}
+
+/* ---------- Likers modal ---------- */
+.likers-modal {
+  max-width: 420px;
+  max-height: 80vh;
+}
+
+.likers-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  border-bottom: 1px solid #e4e6eb;
+}
+.likers-modal-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1c1e21;
+  margin: 0;
+}
+.likers-modal-close {
+  font-size: 24px;
+  line-height: 1;
+  color: #65676b;
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+.likers-modal-close:hover {
+  background: #f0f2f5;
+}
+
+.likers-modal-body {
+  padding: 8px 0;
+  overflow-y: auto;
+}
+
+.likers-modal-empty {
+  padding: 16px 18px;
+  color: #65676b;
+  font-size: 14px;
+}
+
+.likers-modal-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.likers-modal-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 18px;
+}
+.likers-modal-item:hover {
+  background: #f5f6f7;
+}
+.likers-modal-name {
+  color: #050505;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.likers-modal-more {
+  display: block;
+  width: calc(100% - 36px);
+  margin: 8px 18px;
+  padding: 8px;
+  color: #377dff;
+  font-size: 13px;
+  text-align: center;
+  border-top: 1px solid #e4e6eb;
+}
+
+/* ---------- Confirm dialog ----------
+ * Variant of the shared Modal. Smaller, no internal scroll — meant for short
+ * "delete this thing?" prompts. Danger variant flips the confirm button red
+ * so destructive actions are visually distinct.
+ */
+.confirm-dialog {
+  max-width: 380px;
+}
+.confirm-dialog-header {
+  padding: 18px 20px 0;
+}
+.confirm-dialog-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1c1e21;
+  margin: 0;
+}
+.confirm-dialog-body {
+  padding: 12px 20px 18px;
+  font-size: 14px;
+  color: #444;
+  line-height: 1.5;
+}
+.confirm-dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 12px 20px 18px;
+  border-top: 1px solid #e4e6eb;
+}
+.confirm-dialog-cancel {
+  padding: 8px 16px;
+  font-size: 13px;
+  border-radius: 6px;
+  color: #444;
+}
+.confirm-dialog-cancel:hover {
+  background: #f0f2f5;
+}
+.confirm-dialog-confirm {
+  padding: 8px 16px;
+  font-size: 13px;
+  border: none;
+  border-radius: 6px;
+  background: #377dff;
+  color: #fff;
+  cursor: pointer;
+}
+.confirm-dialog-confirm:hover {
+  filter: brightness(1.05);
+}
+.confirm-dialog-confirm-danger {
+  background: #e0245e;
+}
+.confirm-dialog-confirm:disabled,
+.confirm-dialog-cancel:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ---------- Popover ----------
+ * Wrapper is the positioning context (position: relative on the trigger
+ * container). The panel is absolutely positioned right-aligned, matching
+ * the design's existing `_feed_timeline_dropdown` placement.
+ */
+.popover-wrapper {
+  position: relative;
+  display: inline-block;
+}
+.popover-panel {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  min-width: 160px;
+  background: #fff;
+  border: 1px solid #e4e6eb;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  padding: 6px;
+  z-index: 50;
+}
+.popover-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 10px;
+  font-size: 13px;
+  color: #1c1e21;
+  border-radius: 6px;
+  text-align: left;
+  cursor: pointer;
+}
+.popover-item:hover,
+.popover-item:focus-visible {
+  background: #f0f2f5;
+  outline: none;
+}
+.popover-item-danger {
+  color: #d32f2f;
+}
+.popover-item:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ---------- Header profile ----------
+ * Trigger row: avatar + name + caret as one button. The design's
+ * `_header_nav_profile_image { width: 24px }` was constraining an <img>;
+ * our initials variant ignores it, so this layer owns the visual scale.
+ */
+.header-profile-wrapper {
+  display: inline-flex;
+}
+.header-profile-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.header-profile-trigger:hover .header-profile-name {
+  text-decoration: underline;
+}
+.header-profile-avatar {
+  display: inline-flex;
+}
+.header-profile-name {
+  font-size: 15px;
+  font-weight: 500;
+  color: #112032;
+  line-height: 1.2;
+}
+.header-profile-caret {
+  margin-top: 2px;
+}
+/* Panel: roomier than the default popover so the user summary block fits. */
+.header-profile-panel {
+  min-width: 240px;
+  padding: 12px;
+}
+.header-profile-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 4px;
+}
+.header-profile-info-text {
+  display: flex;
+  flex-direction: column;
+}
+.header-profile-info-name {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1c1e21;
+}
+.header-profile-info-link {
+  font-size: 12px;
+  color: #377dff;
+}
+.header-profile-info-link:hover {
+  text-decoration: underline;
+}
+.header-profile-divider {
+  border: 0;
+  border-top: 1px solid #e4e6eb;
+  margin: 8px 0;
+}
+.header-profile-logout {
+  width: 100%;
+}
