@@ -28,9 +28,18 @@ import { UsersModule } from './users/users.module';
       envFilePath: '.env',
       validate: validateEnvironment,
     }),
-    // Global rate-limit baseline (60 req/min per IP) on every route, with
-    // tighter per-route overrides on auth endpoints via @Throttle().
-    ThrottlerModule.forRoot([{ name: 'default', ttl: 60_000, limit: 60 }]),
+    // Global rate-limit baseline on every route, with tighter per-route
+    // overrides on auth endpoints via @Throttle(). In dev, the web app and
+    // api share localhost, so every request keys to the same loopback IP —
+    // Stories, sidebars, feed, hot-reload re-renders all share one bucket
+    // and 60/min trips quickly. Raise the dev limit; prod keeps 60/min.
+    ThrottlerModule.forRoot([
+      {
+        name: 'default',
+        ttl: 60_000,
+        limit: process.env.NODE_ENV === 'production' ? 60 : 1000,
+      },
+    ]),
     ScheduleModule.forRoot(),
     PrismaModule,
     StorageModule,
