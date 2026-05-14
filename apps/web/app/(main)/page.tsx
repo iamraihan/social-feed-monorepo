@@ -28,14 +28,23 @@ export const metadata: Metadata = {
 export default async function HomePage() {
   const currentUser = await requireSession();
 
-  let initialPage: FeedPage;
+  let initialPage: FeedPage | null = null;
+  let feedErrorMessage: string | null = null;
   try {
     initialPage = await getFeed({ limit: 20 });
   } catch (err) {
     if (err instanceof ApiClientError && err.status === 401) {
       redirect('/login');
     }
-    throw err;
+    // 429 from the backend throttler is transient — render the page with
+    // an inline notice instead of crashing the whole (main) segment into
+    // error.tsx. The user can refresh in a moment.
+    if (err instanceof ApiClientError && err.status === 429) {
+      feedErrorMessage =
+        'Too many requests right now. Please refresh in a moment.';
+    } else {
+      throw err;
+    }
   }
 
   return (
@@ -51,10 +60,16 @@ export default async function HomePage() {
               <div className="_layout_middle_inner">
                 <Stories />
                 <PostComposer currentUser={currentUser} />
-                <FeedList
-                  initialPage={initialPage}
-                  currentUser={currentUser}
-                />
+                {initialPage ? (
+                  <FeedList
+                    initialPage={initialPage}
+                    currentUser={currentUser}
+                  />
+                ) : (
+                  <div role="alert" className="form-server-error">
+                    {feedErrorMessage}
+                  </div>
+                )}
               </div>
             </div>
           </div>
